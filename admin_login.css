@@ -1,0 +1,88 @@
+/* Màu nền xanh lá đậm */
+body {
+    background-color: #006633;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+/* Container chứa form */
+.login-container {
+    background: white;
+    padding: 20px;z
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 320px;
+    text-align: center;
+}
+
+/* Header chứa logo */
+.header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+/* Logo thu nhỏ */
+.header img {
+    display: block;
+    max-width: 100%; /* Đảm bảo logo không bị tràn */
+    height: auto;
+    max-height: 200px; /* Tăng kích thước logo */
+    margin: 0 auto 20px; /* Căn giữa và tạo khoảng cách với form */
+}
+
+/* Tiêu đề */
+h2 {
+    color: #006633;
+}
+
+/* Label */
+label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Input */
+input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Nút đăng nhập */
+button {
+    background-color: #009900;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #007700;
+}
+
+/* Link đổi mật khẩu */
+p {
+    margin-top: 10px;
+}
+
+a {
+    color: #006633;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập Admin</title>
+    <link rel="stylesheet" href="admin_login.css">
+</head>
+<body>
+    <div class="login-container">
+            <div class="header">
+                <img src="logo_slogan.png" alt="Logo Công Ty và Slogan">
+            </div>
+        <h2>Đăng nhập Admin</h2>
+        <form id="adminLoginForm">
+            <label>ID:</label>
+            <input type="text" id="adminID" value="admin" readonly>
+
+            <label>Mật khẩu:</label>
+            <input type="password" id="adminPassword" required>
+
+            <button type="submit">Đăng nhập</button>
+            <p><a href="admin_change_password.html">Đổi mật khẩu</a></p>
+        </form>
+    </div>
+
+    <script src="admin_login.js"></script>
+</body>
+</html>
