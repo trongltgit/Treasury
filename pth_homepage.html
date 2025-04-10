@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ - User Đầu Mối PTH</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #006633;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgb(6, 119, 6);
+            padding: 15px;
+        }
+        
+        .logo-slogan img {
+            height: 200px;
+            margin-right: 10px;
+        }
+
+       
+        .user-menu {
+            position: relative;
+        }
+        .user-icon {
+            cursor: pointer;
+            font-size: 24px;
+            color: #007bff;
+        }
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+        .dropdown button {
+            background: none;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            width: 300px;
+        }
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .modal button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .modal button:hover {
+            background-color: #0056b3;
+        }
+        .modal .close-btn {
+            background: red;
+            margin-top: 5px;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+   
+        
+
+        .taskbar {
+            background-color: #006400; /* Xanh lá đậm */
+            padding: 10px;
+        }
+
+        .taskbar ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-around;
+            margin: 0;
+            padding: 0;
+        }
+
+        .taskbar li {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Canh giữa nội dung */
+        }
+
+        .taskbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            display: inline-block;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .taskbar a:hover {
+            background-color: #004d00;
+            border-radius: 5px;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%); /* Căn giữa theo mục cha */
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 100px;
+            min-width: 200px;
+            z-index: 10;
+            text-align: left; /* Canh giữa nội dung */
+        }
+
+        .dropdown input,
+        .dropdown button {
+            display: block;
+            margin: 5px auto;
+            width: 90%;
+        }
+
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            width: 150px;  /* Đặt chiều rộng cố định */
+            padding: 10px 0;
+            z-index: 100;
+        }
+
+                  
+    </style>
+   
+
+</head>
+
+    
+<body>
+    <header>
+        <div class="logo-slogan">
+            <img src="logo_slogan.png" alt="Logo Công Ty">
+        </div>
+        <div class="user-menu">
+            <!-- <span class="user-icon" onclick="toggleDropdown()">&#128100;</span> -->
+            <span class="user-icon" onclick="toggleUserDropdown()">&#128100;</span>
+            <span id="usernameDisplay"></span> - <span id="userDepartment"></span>
+            <div class="dropdown" id="userDropdown">
+                <button onclick="showChangePassword()">Đổi Mật Khẩu</button>
+                <button onclick="logout()">Đăng Xuất</button>
+            </div>
+        </div>
+
+        
+       
+       
+    
+    
+    </header>
+
+    <!-- Hộp thoại đổi mật khẩu -->
+    <div id="changePasswordModal" class="modal">
+        <h3>Đổi Mật Khẩu</h3>
+        <input type="password" id="oldPassword" placeholder="Mật khẩu cũ">
+        <input type="password" id="newPassword" placeholder="Mật khẩu mới">
+        <input type="password" id="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
+        <div class="error-message" id="passwordError"></div>
+        <button onclick="changePassword()">Xác nhận</button>
+        <button class="close-btn" onclick="closeChangePassword()">Hủy</button>
+    </div>
+
+    <script>
+        
+        // Load user info
+        const currentUserID = localStorage.getItem("currentUserID");
+        const currentUserDepartment = localStorage.getItem("currentUserDepartment");
+        
+        function toggleDropdown() {
+            let dropdown = document.getElementById("userDropdown");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        function showChangePassword() {
+            document.getElementById("changePasswordModal").style.display = "block";
+        }
+
+        function closeChangePassword() {
+            document.getElementById("changePasswordModal").style.display = "none";
+        }
+
+        function changePassword() {
+            let oldPassword = document.getElementById("oldPassword").value;
+            let newPassword = document.getElementById("newPassword").value;
+            let confirmNewPassword = document.getElementById("confirmNewPassword").value;
+            let passwordError = document.getElementById("passwordError");
+
+            // Lấy mật khẩu hiện tại (giả sử đã lưu trong localStorage)
+            let storedPassword = localStorage.getItem("userPassword") || "123456"; // Giả lập mật khẩu cũ
+
+            // Kiểm tra mật khẩu cũ có đúng không
+            if (oldPassword !== storedPassword) {
+                passwordError.textContent = "Mật khẩu cũ không đúng.";
+                return;
+            }
+
+            // Kiểm tra định dạng mật khẩu mới
+            let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+            if (!passwordRegex.test(newPassword)) {
+                passwordError.textContent = "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường và ký tự đặc biệt.";
+                return;
+            }
+
+            // Kiểm tra xác nhận mật khẩu
+            if (newPassword !== confirmNewPassword) {
+                passwordError.textContent = "Mật khẩu xác nhận không khớp.";
+                return;
+            }
+
+            // Cập nhật mật khẩu mới vào localStorage (thực tế sẽ gửi lên backend để lưu)
+            localStorage.setItem("userPassword", newPassword);
+
+            alert("Mật khẩu đã được thay đổi thành công!");
+            closeChangePassword();
+        }
+
+        function logout() {
+            // alert("Bạn đã đăng xuất.");
+            window.location.href = "login.html";
+        }
+    </script>
+
+
+<script>
+    function changePassword() {
+        const oldPassword = document.getElementById("oldPassword").value.trim();
+        const newPassword = document.getElementById("newPassword").value.trim();
+        const confirmNewPassword = document.getElementById("confirmNewPassword").value.trim();
+        const passwordError = document.getElementById("passwordError");
+    
+        // Reset thông báo lỗi
+        passwordError.textContent = "";
+    
+        // Lấy mật khẩu đang lưu (nếu chưa có thì mặc định là "123456")
+        let storedPassword = localStorage.getItem("userPassword");
+        if (!storedPassword) {
+            storedPassword = "123456";
+        }
+    
+        // In ra để test (bạn có thể xóa dòng này sau)
+        console.log("Mật khẩu lưu trong hệ thống là:", storedPassword);
+    
+        // So sánh mật khẩu cũ
+        if (oldPassword !== storedPassword) {
+            passwordError.textContent = "⚠️ Mật khẩu cũ không đúng.";
+            return;
+        }
+    
+        // Kiểm tra định dạng mật khẩu mới
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            passwordError.textContent = "⚠️ Mật khẩu mới phải có ít nhất 8 ký tự, gồm chữ hoa, thường và ký tự đặc biệt.";
+            return;
+        }
+    
+        // Kiểm tra xác nhận
+        if (newPassword !== confirmNewPassword) {
+            passwordError.textContent = "⚠️ Mật khẩu xác nhận không khớp.";
+            return;
+        }
+    
+        // Lưu mật khẩu mới vào localStorage
+        localStorage.setItem("userPassword", newPassword);
+    
+        alert("✅ Mật khẩu đã được đổi thành công!");
+    
+        // Đóng modal & reset input
+        closeChangePassword();
+    }
+    
+    function closeChangePassword() {
+        document.getElementById("changePasswordModal").style.display = "none";
+        document.getElementById("oldPassword").value = "";
+        document.getElementById("newPassword").value = "";
+        document.getElementById("confirmNewPassword").value = "";
+        document.getElementById("passwordError").textContent = "";
+    }
+    </script>
+    
+
+    
+
+<nav class="taskbar">
+    <ul>
+        <li>
+            <a href="javascript:void(0)" onclick="toggleDropdown('nhap-thong-tin')">Nhập Thông Tin</a>
+            <div class="dropdown" id="nhap-thong-tin">
+                <input type="file" id="fileUpload" accept=".csv, .xls, .xlsx, .pdf">
+                <button onclick="uploadFile()">Tải Lên</button>
+            </div>
+        </li>
+        <li>
+            <a href="javascript:void(0)" onclick="toggleDropdown('blotter')">Blotter</a>
+            <div class="dropdown" id="blotter">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Giao Dịch</th>
+                            <th>Loại Tiền</th>
+                            <th>Trạng Thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dữ liệu giao dịch sẽ được hiển thị ở đây -->
+                    </tbody>
+                </table>
+            </div>
+        </li>
+        <li>
+            <a href="javascript:void(0)" onclick="toggleDropdown('bao-cao')">Báo Cáo</a>
+            <div class="dropdown" id="bao-cao">
+                <input type="file" id="reportTemplate" accept=".xls, .xlsx, .pdf">
+                <button onclick="uploadReportTemplate()">Tải Lên Mẫu Báo Cáo</button>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+    <script>
+    function toggleDropdown(id) {
+        var dropdown = document.getElementById(id);
+        var allDropdowns = document.querySelectorAll(".dropdown");
+        
+        allDropdowns.forEach(function (menu) {
+            if (menu.id !== id) {
+                menu.style.display = "none";
+            }
+        });
+    
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+    </script>
+
+    <script>
+    function toggleTaskbarDropdown(id) {
+        var dropdown = document.getElementById(id);
+        var allDropdowns = document.querySelectorAll(".dropdown");
+
+        allDropdowns.forEach(function (menu) {
+            if (menu.id !== id && menu.id !== "userDropdown") {
+                menu.style.display = "none";
+            }
+        });
+
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    function toggleUserDropdown() {
+        var dropdown = document.getElementById("userDropdown");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    </script>
+
+<script src="script.js"></script>
+
+   
+
+</body>
+</html>
